@@ -1,0 +1,127 @@
+import javax.swing.*;
+public class EcommerceCheckout 
+{
+    private static final String[] ROOM_TYPE = {"Double", "Suite", "President Suite"};
+    private static final double[] EXTRA_CHARGE = {50.00, 200.50, 1234.0};
+    private static final float NIGHTLY_PRICE = 100.99f;
+    
+    public static void main(String[] args) 
+    {
+        int amountOfRooms = Integer.parseInt(JOptionPane.showInputDialog(
+            null, "Ready to book? How many rooms do you want to book?"));
+
+        for(int loopCount = 0; loopCount < amountOfRooms; ++loopCount)
+        {
+            String bookingInfo = JOptionPane.showInputDialog(
+                null, "Enter the primary guest's name "
+                + "and the number of nights you plan to stay, separated by -");
+
+            int index = bookingInfo.indexOf('-');
+            String guestName = bookingInfo.substring(0, index);
+            byte nights = Byte.parseByte(bookingInfo.substring(index+1));
+            float additionalCharge = 0.0f;
+
+            String upgradeInfo;
+            boolean isValid;
+
+            do 
+            {
+                isValid = false;
+                upgradeInfo = JOptionPane.showInputDialog(
+                    null, "Do you want to upgrade your room to Double, Suite or President Suite?"
+                    + "\nEnter the type of room you want to upgrade. If no, please enter No");
+
+                for(int subscript = 0; subscript < ROOM_TYPE.length; ++subscript) {
+                    if(upgradeInfo.equalsIgnoreCase(ROOM_TYPE[subscript])) 
+                    {
+                        additionalCharge = (float)EXTRA_CHARGE[subscript];
+                        isValid = true;
+                    } 
+                    else 
+                        {
+                        if(upgradeInfo.equalsIgnoreCase("No")) {
+                            additionalCharge = 0.0f;
+                            isValid = true;
+                        } 
+                        else 
+                        {
+                            if(subscript == ROOM_TYPE.length - 1 && !isValid) {
+                                JOptionPane.showMessageDialog(
+                                    null, upgradeInfo + " is invalid. "
+                                    + "Please enter a valid room type or No.");
+                            }
+                        }
+                    }
+                }
+
+            } 
+            while(!isValid);
+
+            // Create booking object
+            NamesChild booking = new NamesChild(guestName, NIGHTLY_PRICE, additionalCharge, nights);
+        }
+            JOptionPane.showMessageDialog(null,
+             "Booking complete\n" +
+             "You book a total of " + Names.returnNumberOfRooms() + " rooms\n" +
+                "Primary guests' names: " + Names.returnNames() + "\n" +
+                "Your total is $" + Names.returnTotalPrice());
+    }
+
+}
+
+
+
+// Class 2
+
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.ecommercecheckout;
+
+/**
+ *
+ * @author mendezmendez
+ */
+class Names 
+{
+    private static String names = "";
+    private static byte numberOfRooms;
+    private static float totalPrice;
+    
+    public Names(String name, float price, byte lengthOfStay)
+    {
+        names += name + ", ";
+        ++numberOfRooms;
+        totalPrice += (float)(price *  lengthOfStay);
+    }
+    
+    public static byte returnNumberOfRooms()
+    {
+        return numberOfRooms;
+    }
+    
+    public static String returnNames()
+    {
+            return names;    
+    }
+    
+    public static float returnTotalPrice()
+    {
+        return totalPrice;
+    }
+}
+
+
+
+// Class 3
+
+
+class NamesChild extends Names
+{
+    public NamesChild(String name, float nightlyPrice, float surcharge, byte lengthOfStay)
+    {
+        super(name, nightlyPrice + surcharge, lengthOfStay);
+    }
+}
